@@ -12,6 +12,10 @@ struct SnakeChunk
 	int x, y;
 	char mark;
 
+	SnakeChunk(): x(0), y(0), mark(0)
+	{
+	}
+
 	SnakeChunk(const int x, const int y, const char m)
 	{
 		this->x = x;
@@ -34,7 +38,7 @@ class Snake
 	std::vector<SnakeChunk> tail;
 
 public:
-	Snake(SnakeChunk head, std::vector<SnakeChunk> tail);
+	Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail);
 	~Snake();
 
 	bool tryToMove(DIRECTION dir);

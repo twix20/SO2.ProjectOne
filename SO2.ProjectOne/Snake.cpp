@@ -2,7 +2,7 @@
 #include "Snake.h"
 #include <algorithm>
 
-Snake::Snake(const SnakeChunk head, const std::vector<SnakeChunk> tail)
+Snake::Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail)
 {
 	this->head = head;
 	this->tail = tail;
