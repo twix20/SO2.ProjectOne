@@ -41,7 +41,7 @@ std::vector<MovingArea> WindowController::splitIntoAreas() const
 	const int offest = 1;
 	for (auto& a : result)
 	{
-		//a.topLeftX += offest;
+		a.topLeftX += offest;
 		a.width -= offest + 1;
 
 		a.topLeftY += offest;

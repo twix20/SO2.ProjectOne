@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SnakeFactory.h"
+#include <xlocale>
+#include <algorithm>
 
 #define TAIL_CHAR '*'
 
@@ -12,26 +14,27 @@ SnakeFactory::~SnakeFactory()
 {
 }
 
-std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(const MovingArea area, const int snakeLength, std::shared_ptr<WindowController> window) const
+std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(MovingArea& area, const int snakeLength, std::shared_ptr<WindowController> window) const
 {
-	if(snakeLength > area.width || snakeLength <= 0)
+	if (snakeLength > area.width || snakeLength <= 0)
 		throw std::invalid_argument("not supported snakeLength");
 
-	std::vector<SnakeChunk> tail;
-
-	int c = 1;
-	tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY, TAIL_CHAR));
-
-	while (tail.size() < snakeLength)
+	std::vector<SnakeChunk> tail{ SnakeChunk(area.topLeftX , area.topLeftY, TAIL_CHAR) };
+	while (static_cast<int>(tail.size()) < snakeLength)
 	{
-		c++;
-
-		tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY + 1, TAIL_CHAR));
+		tail.push_back(SnakeChunk(area.topLeftX + tail.size(), area.topLeftY, TAIL_CHAR));
 	}
 
 	const SnakeChunk head = tail.back();
-
 	tail.pop_back();
 
-	return std::make_unique<Snake>(head, tail, window);
+	auto snake = std::make_unique<Snake>(head, tail, window);
+
+	std::vector<DIRECTION> transportSnakeDirs{ S, S, S, E, E, E, E };
+	std::for_each(transportSnakeDirs.begin(), transportSnakeDirs.end(), [&](DIRECTION& dir)
+	{
+		snake->tryToMove(dir, area);
+	});
+
+	return snake;
 }

@@ -57,6 +57,7 @@ public:
 	~Snake();
 
 	bool tryToMove(DIRECTION dir, MovingArea& area);
+
 	static bool isOverlapingTail(std::vector<SnakeChunk>& tail, int x, int y);
 
 	void moveRandomInArea(MovingArea& area);
