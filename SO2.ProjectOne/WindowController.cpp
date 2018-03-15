@@ -31,6 +31,22 @@ void WindowController::clearPosition(const int x, const int y) const
 	wrefresh(win.get());
 }
 
+void WindowController::drawHorizontalLine(const int x, const int y, chtype ch, const int n) const
+{
+	std::lock_guard<std::mutex> lock(ncursesMx);
+
+	mvwhline(win.get(), y, x, ch, n);
+	wrefresh(win.get());
+}
+
+void WindowController::drawVerticalLine(const int x, const int y, const chtype ch, const int n) const
+{
+	std::lock_guard<std::mutex> lock(ncursesMx);
+
+	mvwvline(win.get(), y, x, ch, n);
+	wrefresh(win.get());
+}
+
 void WindowController::drawCharAtPosition(const int x, const int y, const char mark) const
 {
 	std::lock_guard<std::mutex> lock(this->ncursesMx);
