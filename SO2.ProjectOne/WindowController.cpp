@@ -23,6 +23,34 @@ WindowController::~WindowController()
 	endwin();
 }
 
+std::vector<MovingArea> WindowController::splitIntoAreas() const
+{
+	std::vector<MovingArea> result;
+
+	const int sharedHeight = height / 2;
+	const int sharedWidth = width / 2;
+
+	result.push_back({ 0,            0,           sharedHeight, sharedWidth });
+	result.push_back({ 0,            sharedHeight, sharedHeight, sharedWidth });
+	result.push_back({ sharedWidth, 0,            sharedHeight, sharedWidth });
+	result.push_back({ sharedWidth, sharedHeight,  sharedHeight, sharedWidth });
+
+	drawHorizontalLine(1, height / 2, '_', width - 2);
+	drawVerticalLine(width / 2, 1, '|', height - 2);
+
+	const int offest = 1;
+	for (auto& a : result)
+	{
+		//a.topLeftX += offest;
+		a.width -= offest + 1;
+
+		a.topLeftY += offest;
+		a.height -= offest + 1;
+	}
+
+	return result;
+}
+
 void WindowController::clearPosition(const int x, const int y) const
 {
 	std::lock_guard<std::mutex> lock(ncursesMx);

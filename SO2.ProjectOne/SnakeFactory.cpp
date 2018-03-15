@@ -18,14 +18,15 @@ std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(const MovingArea 
 		throw std::invalid_argument("not supported snakeLength");
 
 	std::vector<SnakeChunk> tail;
-	tail.push_back(SnakeChunk(area.topLeftX, area.topLeftY, TAIL_CHAR));
 
 	int c = 1;
+	tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY, TAIL_CHAR));
+
 	while (tail.size() < snakeLength)
 	{
-		tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY, TAIL_CHAR));
-
 		c++;
+
+		tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY + 1, TAIL_CHAR));
 	}
 
 	const SnakeChunk head = tail.back();

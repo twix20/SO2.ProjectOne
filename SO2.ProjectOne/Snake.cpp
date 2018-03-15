@@ -83,7 +83,7 @@ void Snake::moveRandomInArea(MovingArea& area)
 		if (!moved)
 			avalibleDirections.erase(avalibleDirections.begin() + randomIndex);
 
-		if (avalibleDirections.size() == 0) //should never happen
+		if (avalibleDirections.size() == 0) //can happen if snake is stuck
 			break;
 
 	} while (!moved);

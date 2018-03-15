@@ -14,6 +14,8 @@ public:
 	WindowController(int height, int width);
 	~WindowController();
 
+	std::vector<MovingArea> splitIntoAreas() const;
+
 	void clearPosition(int x, int y) const;
 
 	void drawHorizontalLine(int x, int y, chtype ch, int n) const;
