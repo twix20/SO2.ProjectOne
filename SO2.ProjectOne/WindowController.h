@@ -1,6 +1,7 @@
 #pragma once
 #include "curses.h"
 #include <mutex>
+#include "Snake.h"
 
 class WindowController
 {
@@ -14,6 +15,9 @@ public:
 	~WindowController();
 
 	void clearPosition(int x, int y) const;
+
 	void drawCharAtPosition(int x, int y, char mark) const;
+	void drawChunk(SnakeChunk& chunk) const;
+	void drawChunks(std::vector<SnakeChunk>& chunks) const;
 };
 

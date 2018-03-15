@@ -1,10 +1,21 @@
 #pragma once
 #include <vector>
+#include <memory>
+
+class WindowController;
 
 struct MovingArea
 {
-	int topLeftX, topLeftY;
-	int height, width;
+	unsigned int topLeftX;
+	unsigned int topLeftY;
+	unsigned int height;
+	unsigned int width;
+
+	bool isInArea(const int x, const int y) const
+	{
+		return (x > topLeftX && x < topLeftX + width) &&
+			   (y > topLeftY && y < topLeftY + height);
+	}
 };
 
 struct SnakeChunk
@@ -29,21 +40,27 @@ enum DIRECTION
 	N, 
 	S, 
 	W, 
-	E //E must be last! cuz used in moveRandomInArea
+	E 
 };
 
 class Snake
 {
+	// *****H
+	// H - head
 	SnakeChunk head;
 	std::vector<SnakeChunk> tail;
 
+	std::shared_ptr<WindowController> window;
+
 public:
-	Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail);
+	Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail, std::shared_ptr<WindowController> window);
 	~Snake();
 
-	bool tryToMove(DIRECTION dir);
-	bool isMoveOverlapingTail(int x, int y);
+	bool tryToMove(DIRECTION dir, MovingArea& area);
+	static bool isOverlapingTail(std::vector<SnakeChunk>& tail, int x, int y);
 
-	void moveRandomInArea(MovingArea area);
+	void moveRandomInArea(MovingArea& area);
+
+	void drawMe();
 };
 

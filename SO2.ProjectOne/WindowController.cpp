@@ -2,7 +2,7 @@
 #include "WindowController.h"
 
 
-WindowController::WindowController(int height, int width)
+WindowController::WindowController(const int height, const int width)
 {
 	//Init ncurses
 	initscr();
@@ -15,7 +15,6 @@ WindowController::WindowController(int height, int width)
 	refresh();
 	//Create box border
 	box(win.get(), 0, 0);
-		
 }
 
 WindowController::~WindowController()
@@ -26,7 +25,7 @@ WindowController::~WindowController()
 
 void WindowController::clearPosition(const int x, const int y) const
 {
-	std::lock_guard<std::mutex> lock(this->ncursesMx);
+	std::lock_guard<std::mutex> lock(ncursesMx);
 
 	mvwaddch(win.get(), y, x, ' ');
 	wrefresh(win.get());
@@ -39,3 +38,16 @@ void WindowController::drawCharAtPosition(const int x, const int y, const char m
 	mvwaddch(win.get(), y, x, mark);
 	wrefresh(win.get());
 }
+
+void WindowController::drawChunk(SnakeChunk& chunk) const
+{
+	drawCharAtPosition(chunk.x, chunk.y, chunk.mark);
+}
+
+void WindowController::drawChunks(std::vector<SnakeChunk>& chunks) const
+{
+	for(auto& t : chunks)
+		drawChunk(t);
+}
+
+

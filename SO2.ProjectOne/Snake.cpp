@@ -1,18 +1,23 @@
 #include "stdafx.h"
-#include "Snake.h"
 #include <algorithm>
+#include <windows.h>
 
-Snake::Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail)
+#include "Snake.h"
+#include "WindowController.h"
+#include "Utils.h"
+
+Snake::Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail, const std::shared_ptr<WindowController> window)
 {
 	this->head = head;
 	this->tail = tail;
+	this->window = window;
 }
 
 Snake::~Snake()
 {
 }
 
-bool Snake::tryToMove(const DIRECTION dir)
+bool Snake::tryToMove(const DIRECTION dir, MovingArea& area)
 {
 	auto futureX = head.x;
 	auto futureY = head.y;
@@ -20,48 +25,76 @@ bool Snake::tryToMove(const DIRECTION dir)
 	switch (dir)
 	{
 	case N:
-		futureY++;
+		futureY--;
 		break;
 	case S:
-		futureY--;
+		futureY++;
 		break;
 	case W:
 		futureX--;
 		break;
 	case E:
-		futureY++;
+		futureX++;
 		break;
 	}
 
 	//Check if can move
+	if (isOverlapingTail(tail, futureX, futureY))
+		return false;
 
-	if (isMoveOverlapingTail(futureX, futureY))
+	if (!area.isInArea(futureX, futureY))
 		return false;
 
 	//Perform move
-	tail.insert(tail.begin(), head);
-	tail.pop_back();
+	tail.push_back(SnakeChunk(head.x, head.y, '*'));
 
-	head.x = futureX;
-	head.y = futureY;
+
+	head = SnakeChunk(futureX, futureY, 'H');
+
+	const SnakeChunk first = *tail.begin();
+	tail.erase(tail.begin());
+
+	window->clearPosition(first.x, first.y);
+	window->drawChunk(tail.back());
+	window->drawChunk(head);
 
 	return true;
 }
 
-bool Snake::isMoveOverlapingTail(const int futureX, const int futureY)
+bool Snake::isOverlapingTail(std::vector<SnakeChunk>& tail, int x, int y)
 {
 	return std::any_of(begin(tail), end(tail), [&](SnakeChunk& chunk) -> bool {
-		return chunk.x == futureX && chunk.y == futureY;
+		return chunk.x == x && chunk.y == y;
 	});
 }
 
-void Snake::moveRandomInArea(MovingArea area)
+void Snake::moveRandomInArea(MovingArea& area)
 {
-	DIRECTION randomDirection;
+	bool moved = false;
+	std::vector<DIRECTION> avalibleDirections = { N, S, W, E };
 	do
 	{
-		randomDirection = static_cast<DIRECTION>(rand() % E);
-	} while (tryToMove(randomDirection));
+		const unsigned int randomIndex = Utils::random_in_range(0, avalibleDirections.size() - 1);
+
+		//Utils::print_log("%i in thread %d\n for area %p", randomIndex, std::this_thread::get_id(), area);
+
+		moved = tryToMove(avalibleDirections[randomIndex], area);
+
+		if (!moved)
+			avalibleDirections.erase(avalibleDirections.begin() + randomIndex);
+
+		if (avalibleDirections.size() == 0) //should never happen
+			break;
+
+	} while (!moved);
+
+
+}
+
+void Snake::drawMe()
+{
+	window->drawChunk(head);
+	window->drawChunks(tail);
 }
 
 
