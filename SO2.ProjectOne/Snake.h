@@ -6,10 +6,10 @@ class WindowController;
 
 struct MovingArea
 {
-	unsigned int topLeftX;
-	unsigned int topLeftY;
-	unsigned int height;
-	unsigned int width;
+	int topLeftX;
+	int topLeftY;
+	int height;
+	int width;
 
 	bool isInArea(const int x, const int y) const
 	{

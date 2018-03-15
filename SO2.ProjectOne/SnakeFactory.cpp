@@ -12,19 +12,18 @@ SnakeFactory::~SnakeFactory()
 {
 }
 
-std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(const MovingArea area, const unsigned int snakeLength, std::shared_ptr<WindowController> window) const
+std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(const MovingArea area, const int snakeLength, std::shared_ptr<WindowController> window) const
 {
-	std::vector<SnakeChunk> tail;
+	if(snakeLength > area.width || snakeLength <= 0)
+		throw std::invalid_argument("not supported snakeLength");
 
+	std::vector<SnakeChunk> tail;
 	tail.push_back(SnakeChunk(area.topLeftX, area.topLeftY, TAIL_CHAR));
 
 	int c = 1;
 	while (tail.size() < snakeLength)
 	{
-		if (area.width > c)
-		{
-			tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY, TAIL_CHAR));
-		}
+		tail.push_back(SnakeChunk(area.topLeftX + c, area.topLeftY, TAIL_CHAR));
 
 		c++;
 	}
