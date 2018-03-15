@@ -1,7 +1,7 @@
 #pragma once
-#include <memory>
 #include <windows.h>
 #include <cstdarg>
+#include <random>
 
 namespace Utils
 {
@@ -16,8 +16,15 @@ namespace Utils
 		return 0;
 	}
 
+
 	int random_in_range(const int min, const int max)
 	{
-		return (rand() % (max - min + 1) + min);
+		std::random_device r;
+		std::default_random_engine e1(r());
+
+		const std::uniform_int_distribution<int> uniform_dist(min, max);
+		const auto result = uniform_dist(e1);
+
+		return result;
 	}
 }
