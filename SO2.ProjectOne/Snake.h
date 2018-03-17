@@ -22,16 +22,18 @@ struct SnakeChunk
 {
 	int x, y;
 	char mark;
+	int colorPair;
 
-	SnakeChunk(): x(0), y(0), mark(0)
+	SnakeChunk(): x(0), y(0), mark(0), colorPair(0)
 	{
 	}
 
-	SnakeChunk(const int x, const int y, const char m)
+	SnakeChunk(const int x, const int y, const char m, const int colorPair)
 	{
 		this->x = x;
 		this->y = y;
 		this->mark = m;
+		this->colorPair = colorPair;
 	}
 };
 

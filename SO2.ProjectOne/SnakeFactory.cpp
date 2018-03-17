@@ -3,8 +3,6 @@
 #include <xlocale>
 #include <algorithm>
 
-#define TAIL_CHAR '*'
-
 SnakeFactory::SnakeFactory()
 {
 }
@@ -19,10 +17,10 @@ std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(MovingArea& area,
 	if (snakeLength > area.width || snakeLength <= 0)
 		throw std::invalid_argument("not supported snakeLength");
 
-	std::vector<SnakeChunk> tail{ SnakeChunk(area.topLeftX , area.topLeftY, TAIL_CHAR) };
+	std::vector<SnakeChunk> tail;
 	while (static_cast<int>(tail.size()) < snakeLength)
 	{
-		tail.push_back(SnakeChunk(area.topLeftX + tail.size(), area.topLeftY, TAIL_CHAR));
+		tail.push_back(createTailChunk(area.topLeftX + tail.size(), area.topLeftY));
 	}
 
 	const SnakeChunk head = tail.back();
@@ -37,4 +35,14 @@ std::unique_ptr<Snake> SnakeFactory::generateRandomSnakeInArea(MovingArea& area,
 	});
 
 	return snake;
+}
+
+SnakeChunk SnakeFactory::createHeadChunk(const int x, const int y)
+{
+	return SnakeChunk(x, y, 'H', 1);
+}
+
+SnakeChunk SnakeFactory::createTailChunk(const int x, const int y)
+{
+	return SnakeChunk(x, y, '*', 2);
 }

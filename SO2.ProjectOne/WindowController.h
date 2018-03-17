@@ -21,8 +21,7 @@ public:
 	void drawHorizontalLine(int x, int y, chtype ch, int n) const;
 	void drawVerticalLine(int x, int y, chtype ch, int n) const;
 
-	void drawCharAtPosition(int x, int y, char mark) const;
+	void drawCharAtPosition(int x, int y, char mark, int colorPair) const;
 	void drawChunk(SnakeChunk& chunk) const;
-	void drawChunks(std::vector<SnakeChunk>& chunks) const;
 };
 

@@ -6,6 +6,10 @@ WindowController::WindowController(const int height, const int width)
 {
 	//Init ncurses
 	initscr();
+	start_color();
+
+	init_pair(1, COLOR_WHITE, COLOR_RED);
+	init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
 	this->height = height;
 	this->width = width;
@@ -75,23 +79,20 @@ void WindowController::drawVerticalLine(const int x, const int y, const chtype c
 	wrefresh(win.get());
 }
 
-void WindowController::drawCharAtPosition(const int x, const int y, const char mark) const
+void WindowController::drawCharAtPosition(const int x, const int y, const char mark, int colorPair) const
 {
 	std::lock_guard<std::mutex> lock(this->ncursesMx);
 
+	wattron(win.get(), COLOR_PAIR(colorPair));
 	mvwaddch(win.get(), y, x, mark);
+	wattroff(win.get(), COLOR_PAIR(colorPair));
+
 	wrefresh(win.get());
 }
 
 void WindowController::drawChunk(SnakeChunk& chunk) const
 {
-	drawCharAtPosition(chunk.x, chunk.y, chunk.mark);
-}
-
-void WindowController::drawChunks(std::vector<SnakeChunk>& chunks) const
-{
-	for(auto& t : chunks)
-		drawChunk(t);
+	drawCharAtPosition(chunk.x, chunk.y, chunk.mark, chunk.colorPair);
 }
 
 

@@ -5,6 +5,7 @@
 #include "Snake.h"
 #include "WindowController.h"
 #include "Utils.h"
+#include "SnakeFactory.h"
 
 Snake::Snake(const SnakeChunk head, const std::vector<SnakeChunk>& tail, const std::shared_ptr<WindowController> window)
 {
@@ -46,10 +47,9 @@ bool Snake::tryToMove(const DIRECTION dir, MovingArea& area)
 		return false;
 
 	//Perform move
-	tail.push_back(SnakeChunk(head.x, head.y, '*'));
+	tail.push_back(SnakeFactory::createTailChunk(head.x, head.y));
 
-
-	head = SnakeChunk(futureX, futureY, 'H');
+	head = SnakeFactory::createHeadChunk(futureX, futureY);
 
 	const SnakeChunk first = *tail.begin();
 	tail.erase(tail.begin());
@@ -94,7 +94,9 @@ void Snake::moveRandomInArea(MovingArea& area)
 void Snake::drawMe()
 {
 	window->drawChunk(head);
-	window->drawChunks(tail);
+
+	for (auto& t : tail)
+		window->drawChunk(t);
 }
 
 
