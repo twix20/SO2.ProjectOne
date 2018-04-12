@@ -10,10 +10,10 @@ struct WallArea
 	int height;
 	int width;
 
-	std::vector<Brick*> bricks;
+	std::vector<std::shared_ptr<Brick>> bricks;
 
 	//returns true if moved out of area
-	bool tryMoveBrickSouth(Brick* brick) const
+	bool tryMoveBrickSouth(std::shared_ptr<Brick> brick) const
 	{
 		if (!isInArea(brick->x, brick->y + brick->height))
 		{
@@ -24,7 +24,7 @@ struct WallArea
 		return true;
 	}
 
-	bool tryEmbedBrick(Brick* brick)
+	bool tryEmbedBrick(std::shared_ptr<Brick> brick)
 	{
 		Utilss::print_log("All bricks in area: x:%d y:%d\n", topLeftX, topLeftY);
 		for (auto it = begin(bricks); it != end(bricks); ++it)

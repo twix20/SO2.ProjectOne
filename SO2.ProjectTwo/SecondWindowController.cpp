@@ -79,7 +79,7 @@ void SecondWindowController::drawCharAtPosition(const int x, const int y, const 
 	wrefresh(win.get());
 }
 
-void SecondWindowController::clearBrick(Brick* brick) const
+void SecondWindowController::clearBrick(std::shared_ptr<Brick> brick) const
 {
 	std::lock_guard<std::mutex> lock(this->ncursesMx);
 
@@ -93,7 +93,7 @@ void SecondWindowController::clearBrick(Brick* brick) const
 	}
 }
 
-void SecondWindowController::drawBrick(Brick* brick) const
+void SecondWindowController::drawBrick(std::shared_ptr<Brick> brick) const
 {
 	std::lock_guard<std::mutex> lock(this->ncursesMx);
 

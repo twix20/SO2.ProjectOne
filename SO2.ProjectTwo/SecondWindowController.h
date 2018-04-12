@@ -26,8 +26,8 @@ public:
 
 	void drawCharAtPosition(int x, int y, char mark, int colorPair) const;
 
-	void clearBrick(Brick* brickToClear) const;
-	void drawBrick(Brick* brick) const;
+	void clearBrick(std::shared_ptr<Brick> brickToClear) const;
+	void drawBrick(std::shared_ptr<Brick> brick) const;
 };
 
 
