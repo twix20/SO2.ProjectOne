@@ -1,6 +1,7 @@
 #pragma once
 
-#define BRICK_SIZE 2
+#define BRICK_HEIGHT 3
+#define BRICK_WIDTH 5
 
 class Brick
 {

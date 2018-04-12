@@ -8,10 +8,10 @@ Brick::Brick(const int x, const int y)
 	this->x = x;
 	this->y = y;
 
-	this->width = BRICK_SIZE;
-	this->height = BRICK_SIZE;
+	this->width = BRICK_WIDTH;
+	this->height = BRICK_HEIGHT;
 
-	this->colorPair = Utilss::random_in_range(1, 64);
+	this->colorPair = Utilss::random_in_range(1, 49);
 }
 
 bool Brick::containsPoint(const int x, const int y) const
