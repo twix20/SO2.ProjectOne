@@ -26,11 +26,6 @@ struct WallArea
 
 	bool tryEmbedBrick(std::shared_ptr<Brick> brick)
 	{
-		Utilss::print_log("All bricks in area: x:%d y:%d\n", topLeftX, topLeftY);
-		for (auto it = begin(bricks); it != end(bricks); ++it)
-			Utilss::print_log("Brick: x:%d y:%d\n", (*it)->x, (*it)->y);
-
-
 		for (int i = topLeftX + 1; i < topLeftX + width; i++)
 		{
 			for (int j = topLeftY + 1; j < topLeftY + height; j++)
@@ -40,8 +35,6 @@ struct WallArea
 					brick->x = i;
 					brick->y = j;
 					this->bricks.push_back(brick);
-
-					Utilss::print_log("wsadzam x:%d y:%d\n", brick->x, brick->y);
 					return true;
 				}
 			}
