@@ -1,5 +1,7 @@
 #pragma once
 
+#define BRICK_SIZE 2
+
 class Brick
 {
 
@@ -7,20 +9,11 @@ public:
 	int x, y;
 	int width, height;
 
-	Brick(const int x, const int y)
-	{
-		this->x = x;
-		this->y = y;
+	int colorPair;
 
-		this->width = 2;
-		this->height = 2;
-	}
+	Brick(const int x, const int y);
 
-	bool containsPoint(const int x, const int y) const
-	{
-		return (x >= this->x && x <= this->x + width) &&
-			   (y >= this->y && y <= this->y + height);
-	}
+	bool containsPoint(const int x, const int y) const;
 };
 
 

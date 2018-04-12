@@ -44,5 +44,8 @@
     <ClCompile Include="SecondWindowController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

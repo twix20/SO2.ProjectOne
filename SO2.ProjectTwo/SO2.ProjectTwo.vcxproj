@@ -160,6 +160,7 @@
     <ClInclude Include="WallArea.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Brick.cpp" />
     <ClCompile Include="SecondWindowController.cpp" />
     <ClCompile Include="SO2.ProjectTwo.cpp" />
     <ClCompile Include="stdafx.cpp">
