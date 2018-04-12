@@ -156,7 +156,8 @@
     <ClInclude Include="SecondWindowController.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Utilss.h" />
+    <ClInclude Include="WallArea.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SecondWindowController.cpp" />

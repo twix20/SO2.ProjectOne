@@ -27,7 +27,10 @@
     <ClInclude Include="SecondWindowController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
+    <ClInclude Include="WallArea.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

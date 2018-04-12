@@ -3,9 +3,9 @@
 #include <cstdarg>
 #include <random>
 
-namespace Utils
+namespace Utilss
 {
-	int print_log(const char* format, ...)
+	inline int print_log(const char* format, ...)
 	{
 		static char s_printf_buf[1024];
 		va_list args;
@@ -17,7 +17,7 @@ namespace Utils
 	}
 
 
-	int random_in_range(const int min, const int max)
+	inline int random_in_range(const int min, const int max)
 	{
 		std::random_device r;
 		std::default_random_engine e1(r());

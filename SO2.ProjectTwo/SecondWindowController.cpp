@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SecondWindowController.h"
 
-
 SecondWindowController::SecondWindowController(const int height, const int width)
 {
 	//Init ncurses
@@ -80,24 +79,33 @@ void SecondWindowController::drawCharAtPosition(const int x, const int y, const 
 	wrefresh(win.get());
 }
 
-void SecondWindowController::clearBrick(std::shared_ptr<Brick> brick) const
+void SecondWindowController::clearBrick(Brick* brick) const
 {
+	std::lock_guard<std::mutex> lock(this->ncursesMx);
+
 	for (int i = 0; i < brick->width; i++)
 	{
 		for (int j = 0; j < brick->height; j++)
 		{
-			clearPosition(brick->x + i, brick->y + j);
+			mvwaddch(win.get(), brick->y + j, brick->x + i, ' ');
+			wrefresh(win.get());
 		}
 	}
 }
 
-void SecondWindowController::drawBrick(std::shared_ptr<Brick> brick) const
+void SecondWindowController::drawBrick(Brick* brick) const
 {
+	std::lock_guard<std::mutex> lock(this->ncursesMx);
+
 	for (int i = 0; i < brick->width; i++)
 	{
 		for (int j = 0; j < brick->height; j++)
 		{
-			drawCharAtPosition(brick->x + i, brick->y + j, '*', 1);
+			wattron(win.get(), COLOR_PAIR(1));
+			mvwaddch(win.get(), brick->y + j, brick->x + i, '*');
+			wattroff(win.get(), COLOR_PAIR(1));
+
+			wrefresh(win.get());
 		}
 	}
 }

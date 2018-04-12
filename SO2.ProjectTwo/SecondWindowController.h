@@ -1,8 +1,10 @@
 #pragma once
 #include "curses.h"
-#include "Brick.h"
 #include <mutex>
 #include <vector>
+
+#include "Brick.h"
+#include "WallArea.h"
 
 class SecondWindowController
 {
@@ -24,8 +26,8 @@ public:
 
 	void drawCharAtPosition(int x, int y, char mark, int colorPair) const;
 
-	void clearBrick(std::shared_ptr<Brick> brickToClear) const;
-	void drawBrick(std::shared_ptr<Brick> brick) const;
+	void clearBrick(Brick* brickToClear) const;
+	void drawBrick(Brick* brick) const;
 };
 
 
