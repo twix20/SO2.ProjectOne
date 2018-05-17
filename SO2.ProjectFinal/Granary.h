@@ -4,11 +4,11 @@
 
 struct Wood
 {
-	int energy_value;
+	int cookingTime;
 
-	Wood(const int energy)
+	Wood(const int cookingTimeMs)
 	{
-		energy_value = energy;
+		cookingTime = cookingTimeMs;
 	}
 };
 
@@ -26,6 +26,9 @@ struct Meat
 
 class Granary
 {
+private:
+	std::shared_ptr<Meat> take_meat(std::function<bool(const std::shared_ptr<Meat>)> predicate);
+
 public:
 	std::mutex mx;
 	std::condition_variable cv_woods;
@@ -41,6 +44,8 @@ public:
 
 	std::shared_ptr<Meat> take_fried_meat();
 	std::shared_ptr<Meat> take_raw_meat();
+
+	std::shared_ptr<Wood> take_wood();
 
 
 

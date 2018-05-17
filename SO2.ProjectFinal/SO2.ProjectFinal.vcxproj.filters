@@ -39,6 +39,12 @@
     <ClInclude Include="Cook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NCursesController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stove.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Cook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NCursesController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stove.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

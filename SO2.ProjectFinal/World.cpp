@@ -6,6 +6,7 @@
 #include <chrono>
 #include <algorithm>
 #include "Woodcutter.h"
+#include "NCursesController.h"
 
 
 World::World()
@@ -14,10 +15,11 @@ World::World()
 	granary = std::make_shared<Granary>();
 	kitchen = std::make_shared<Kitchen>();
 
+	for(int i = 0; i < 5; i++)
+		granary->add_meat(Meat(180, true));
 
-
-	granary->add_meat(Meat(10, true));
-	granary->add_meat(Meat(10, false));
+	for (int i = 0; i < 300; i++)
+		granary->add_meat(Meat(150, false));
 }
 
 World::~World()
@@ -26,21 +28,32 @@ World::~World()
 
 void World::start()
 {
+	std::shared_ptr<NCursesController> ncurses_controller = std::make_shared<NCursesController>(100, 120);
+
 	std::shared_ptr<World> world_sp(this);
 
-	woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
+	for (int i = 0; i < 5; i++)
+		kitchen->stoves.push_back(std::make_shared<Stove>(world_sp, COOKING_MEAT_TIME_SLEEP_MS));
+
+	for (int i = 0; i < 2; i++)
+		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
+
+	for (int i = 0; i < 4; i++)
+		cooks.push_back(std::make_shared<Cook>(world_sp));
 
 	std::vector<std::thread> threads;
+	//WORLD TIME THREAD
 	threads.push_back(std::thread([&]() {
 		while (true)
 		{
-			const auto after = world_time.load() += std::chrono::seconds(1);
+			const auto after = world_time.load() += std::chrono::seconds(2);
 			world_time.store(after);
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(WORLD_TIME_SLEEP_MS));
 		}
 	}));
 
+	//WOODCUTTER THREADS
 	std::for_each(std::begin(woodcutters), std::end(woodcutters), [&](auto w)
 	{
 		threads.push_back(std::thread([&](std::shared_ptr<Woodcutter> woodcutter) {
@@ -49,19 +62,49 @@ void World::start()
 				auto has_eaten = woodcutter->try_to_eat();
 				auto has_choped = woodcutter->try_chop_wood();
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(WORLD_TIME_SLEEP_MS));
+				std::this_thread::sleep_for(std::chrono::milliseconds(WOODCUTTER_TIME_SLEEP_MS));
 			}
 		}, w));
 	});
 
+	//COOK THREADS
+	std::for_each(std::begin(cooks), std::end(cooks), [&](auto c)
+	{
+		threads.push_back(std::thread([&](std::shared_ptr<Cook> cook) {
+			while (true)
+			{
+				auto has_eaten = cook->try_cook();
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(COOK_TIME_SLEEP_MS));
+			}
+		}, c));
+	});
+	
+	//PRINTIN THREAD
+	threads.push_back(std::thread([&]() {
+		while (true)
+		{
+			clear();
+
+			ncurses_controller->print_world_time(world_time.load());
+			ncurses_controller->print_granary(granary);
+			ncurses_controller->print_woodcutters(woodcutters);
+			ncurses_controller->print_cooks(cooks);
+
+			//std::lock_guard<std::mutex> lock_granary(granary->mx);
+
+			//const auto after = world_time.load() += std::chrono::seconds(1);
+			//world_time.store(after);
+
+			refresh();
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(PRINTING_THREAD_INTERVAL_MS));
+		}
+	}));
+	
 	while (true)
 	{
-		std::cout << "---------------------------------\n";
-		print_world_time();
-		print_granary();
-		print_woodcutters();
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
 	std::for_each(threads.begin(), threads.end(), [](std::thread& t) {t.join(); });
@@ -73,33 +116,4 @@ void print_time(std::chrono::system_clock::time_point tp)
 	std::tm buf{};
 	localtime_s(&buf, &in_time_t);
 	std::cout << std::put_time(&buf, "%Y-%m-%d %X");
-}
-
-void World::print_world_time() const
-{
-	print_time(world_time);
-	std::cout << std::endl;
-}
-
-
-void World::print_granary() const
-{
-	std::lock_guard<std::mutex> lock(granary->mx);
-
-	const auto woods_quantity = granary->woods.size();
-	auto meats_quantity = granary->meats.size();
-
-	std::cout << "Woods: " << woods_quantity << std::endl
-		<< "Raw meats: " << granary->raw_meats_quantity()
-		<< " Fried meats: " << granary->fried_meats_quantity() << std::endl;
-}
-
-void World::print_woodcutters()
-{
-	for(auto& w : woodcutters)
-	{
-		std::cout << "Woodcuter: Stamina needed: " << w->is_stamina_needed() << " Until ";
-		print_time(w->stamina_till);
-		std::cout << std::endl;
- 	}
 }

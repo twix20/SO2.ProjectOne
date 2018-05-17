@@ -16,9 +16,8 @@ public:
 	bool try_to_eat();
 	bool try_chop_wood() const;
 
-
+	bool can_work() const;
 	bool is_stamina_needed() const;
-
 
 	Woodcutter(std::shared_ptr<World> world);
 	~Woodcutter();

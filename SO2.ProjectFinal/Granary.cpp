@@ -29,20 +29,41 @@ std::shared_ptr<Wood> Granary::take_one_wood()
 void Granary::add_meat(Meat meat)
 {
 	meats.push_back(std::make_shared<Meat>(meat));
+	cv_meats.notify_one();
 }
 
 std::shared_ptr<Meat> Granary::take_fried_meat()
 {
-	const auto it = std::find_if(std::begin(meats), std::end(meats), [](const std::shared_ptr<Meat>& meat) { return meat->is_fried; });
+	const auto pred = [](const std::shared_ptr<Meat>& meat) { return meat->is_fried; };
 
-	if(it != std::end(meats))
+	return take_meat(pred);
+}
+
+std::shared_ptr<Meat> Granary::take_raw_meat()
+{
+	const auto pred = [](const std::shared_ptr<Meat>& meat) { return !meat->is_fried; };
+
+	return take_meat(pred);
+}
+
+std::shared_ptr<Wood> Granary::take_wood()
+{
+	const auto it = std::begin(woods);
+	auto v = *it;
+	woods.erase(it);
+	return v;
+}
+
+std::shared_ptr<Meat> Granary::take_meat(std::function<bool(const std::shared_ptr<Meat>)> predicate)
+{
+	const auto it = std::find_if(std::begin(meats), std::end(meats), predicate);
+
+	if (it != std::end(meats))
 	{
 		auto v = *it;
-		if (v->is_fried)
-		{
-			meats.erase(it);
-			return v;
-		}
+
+		meats.erase(it);
+		return v;
 	}
 
 	return nullptr;

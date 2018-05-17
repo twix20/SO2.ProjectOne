@@ -1,16 +1,32 @@
 #pragma once
-#include "Granary.h"
-#include "Kitchen.h"
 
 #include <chrono>
 #include <atomic>
 #include <memory>
 #include "Woodcutter.h"
+#include "Hunter.h"
+#include "Granary.h"
+#include "Kitchen.h"
 
-#define WORLD_TIME_SLEEP_MS 100
+#define WOODCUTTER_START_JOB_HOUR 8
+#define WOODCUTTER_END_JOB_HOUR 16
 
+#define COOK_START_JOB_HOUR 5
+#define COOK_END_JOB_HOUR 20
+
+
+#define WORLD_TIME_SLEEP_MS 1
+#define WOODCUTTER_TIME_SLEEP_MS 100
+
+#define COOK_TIME_SLEEP_MS 100
+#define COOKING_MEAT_TIME_SLEEP_MS 2000
+
+#define PRINTING_THREAD_INTERVAL_MS 100
+
+class Cook;
 class Woodcutter;
 class Kitchen;
+class Cook;
 
 class World
 {
@@ -21,16 +37,12 @@ public:
 	std::shared_ptr<Kitchen> kitchen;
 
 	std::vector<std::shared_ptr<Woodcutter>> woodcutters;
+	std::vector<std::shared_ptr<Cook>> cooks;
+	std::vector<std::shared_ptr<Hunter>> hunters;
 
 	World();
 	~World();
 
-	void set_woodcutters(std::vector<std::shared_ptr<Woodcutter>> woodcutters);
-
 	void start();
-
-	void print_world_time() const;
-	void print_granary() const;
-	void print_woodcutters();
 };
 

@@ -1,22 +1,14 @@
 #pragma once
-#include "Cook.h"
 #include <memory>
 #include <vector>
 #include <condition_variable>
+#include "Stove.h"
+#include "Cook.h" 
 
+class World;
 class Cook;
-
-struct Stove
-{
-	int id;
-	std::shared_ptr<Cook> cook;
-
-	bool is_ocupied_by_cook() const
-	{
-		return !cook;
-	}
-};
-
+class Stove;
+struct Meat;
 
 class Kitchen
 {
@@ -25,10 +17,10 @@ public:
 	std::condition_variable cv_stoves;
 	std::vector<std::shared_ptr<Stove>> stoves;
 
+	std::shared_ptr<Stove> occupy_stove(Cook* cook);
+	void leave_stove(std::shared_ptr<Stove> stove);
 
-	std::shared_ptr<Stove> try_occupy_stove(std::shared_ptr<Cook> cook);
-	void leave_stove(int stove_id);
-
+	int get_free_stoves_quantity();
 
 	Kitchen();
 	~Kitchen();
