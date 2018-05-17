@@ -22,6 +22,6 @@ public:
 	virtual bool is_working_time(int hours) const = 0;
 
 	WorkingHuman(std::shared_ptr<World> world);
-	~WorkingHuman();
+	virtual ~WorkingHuman();
 };
 

@@ -15,12 +15,17 @@ void Cook::perform_work()
 	auto stove = _world->kitchen->occupy_stove(this);
 	lock_kitchen.unlock();
 
-	//Cook
-	std::unique_lock<std::mutex> lock(stove->mx);
-	is_cooking = true;
-	stove->cook_meat(meat);
-	has_cooked_meats_quantity += 1;
+	//Wait for wood
+	std::unique_lock<std::mutex> lock(_world->granary->mx);
+	_world->granary->cv_woods.wait(lock, [&] { return _world->granary->woods.size() > 0; });
+	const auto wood = _world->granary->take_wood();
 	lock.unlock();
+
+	//Cook
+	std::unique_lock<std::mutex> lock_stove(stove->mx);
+	stove->cook_meat(meat, wood);
+	has_cooked_meats_quantity += 1;
+	lock_stove.unlock();
 
 	//Leave stove
 	std::unique_lock<std::mutex> lock_kitchen2(_world->kitchen->mx);
@@ -36,7 +41,6 @@ bool Cook::is_working_time(int hours) const
 
 Cook::Cook(std::shared_ptr<World> world): WorkingHuman(world)
 {
-	is_cooking = false;
 	has_cooked_meats_quantity = 0;
 }
 

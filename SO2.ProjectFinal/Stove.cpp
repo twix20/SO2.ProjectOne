@@ -19,17 +19,11 @@ bool Stove::is_ocupied_by_cook()
 	return cook != nullptr;
 }
 
-void Stove::cook_meat(std::shared_ptr<Meat> meat)
+void Stove::cook_meat(std::shared_ptr<Meat> meat, std::shared_ptr<Wood> wood)
 {
-	//Wait for wood
-	std::unique_lock<std::mutex> lock(_world->granary->mx);
-	_world->granary->cv_woods.wait(lock, [&] { return _world->granary->woods.size() > 0; });
-	const auto wood = _world->granary->take_wood();
-	lock.unlock();
-
 	std::this_thread::sleep_for(std::chrono::milliseconds(wood->cookingTime));
-	meat->is_fried = true;
 
+	meat->is_fried = true;
 	std::lock_guard<std::mutex> lock_granar(_world->granary->mx);
 	_world->granary->add_meat(*meat);
 

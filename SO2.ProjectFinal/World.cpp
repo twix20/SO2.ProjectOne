@@ -20,6 +20,9 @@ World::World()
 
 	for (int i = 0; i < 300; i++)
 		granary->add_meat(Meat(150, false));
+
+	for (int i = 0; i < 300; i++)
+		granary->add_wood(Wood(1500));
 }
 
 World::~World()
@@ -38,8 +41,12 @@ void World::start()
 	for (int i = 0; i < 17; i++)
 		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 1; i++)
 		cooks.push_back(std::make_shared<Cook>(world_sp));
+
+	std::vector<std::shared_ptr<WorkingHuman>> working_humans;
+	working_humans.insert(working_humans.end(), woodcutters.begin(), woodcutters.end());
+	working_humans.insert(working_humans.end(), cooks.begin(), cooks.end());
 
 	std::vector<std::thread> threads;
 	//WORLD TIME THREAD
@@ -53,34 +60,20 @@ void World::start()
 		}
 	}));
 
-	//WOODCUTTER THREADS
-	std::for_each(std::begin(woodcutters), std::end(woodcutters), [&](auto w)
+	//working_humans THREADS
+	std::for_each(std::begin(working_humans), std::end(working_humans), [&](std::shared_ptr<WorkingHuman> w)
 	{
-		threads.push_back(std::thread([&](std::shared_ptr<Woodcutter> woodcutter) {
+		threads.push_back(std::thread([&](std::shared_ptr<WorkingHuman> working_human) {
 			while (true)
 			{
-				auto has_eaten = woodcutter->try_to_eat();
-				auto has_choped = woodcutter->try_to_work();
+				auto has_eaten = working_human->try_to_eat();
+				auto has_worked = working_human->try_to_work();
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(WOODCUTTER_TIME_SLEEP_MS));
+				std::this_thread::sleep_for(std::chrono::milliseconds(WORKING_HUMAN_THREAD_TIME_SLEEP_MS));
 			}
 		}, w));
 	});
 
-	//COOK THREADS
-	std::for_each(std::begin(cooks), std::end(cooks), [&](auto c)
-	{
-		threads.push_back(std::thread([&](std::shared_ptr<Cook> cook) {
-			while (true)
-			{
-				auto has_eaten = cook->try_to_eat();
-				auto has_cooked = cook->try_to_work();
-
-				std::this_thread::sleep_for(std::chrono::milliseconds(COOK_TIME_SLEEP_MS));
-			}
-		}, c));
-	});
-	
 	//PRINTIN THREAD
 	threads.push_back(std::thread([&]() {
 		while (true)

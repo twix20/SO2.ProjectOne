@@ -16,7 +16,8 @@ bool WorkingHuman::can_work() const
 
 	const auto h = tmp.tm_hour + 2;
 	const auto is_work_time = is_working_time(h);
-	if(is_work_time)
+
+	if (is_work_time)
 		return !is_stamina_needed();
 
 	return false;
@@ -52,8 +53,10 @@ bool WorkingHuman::try_to_work()
 {
 	if (can_work())
 	{
+
 		perform_work();
 		return true;
+		
 	}
 
 	return false;

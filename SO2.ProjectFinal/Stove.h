@@ -15,6 +15,6 @@ public:
 	~Stove();
 	Stove(std::shared_ptr<World> world, int cooking_time);
 	bool is_ocupied_by_cook();
-	void cook_meat(std::shared_ptr<Meat> meat);
+	void cook_meat(std::shared_ptr<Meat> meat, std::shared_ptr<Wood> wood);
 };
 

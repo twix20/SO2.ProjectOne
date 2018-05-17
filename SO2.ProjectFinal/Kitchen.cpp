@@ -20,7 +20,6 @@ std::shared_ptr<Stove> Kitchen::occupy_stove(Cook* cook)
 
 void Kitchen::leave_stove(std::shared_ptr<Stove> stove)
 {
-	(*stove->cook).is_cooking = false;
 	stove->cook = nullptr;
 	stoves.push_back(stove);
 }
