@@ -159,6 +159,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Woodcutter.h" />
     <ClInclude Include="Granary.h" />
+    <ClInclude Include="WorkingHuman.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,7 @@
     <ClCompile Include="Stove.cpp" />
     <ClCompile Include="Woodcutter.cpp" />
     <ClCompile Include="Granary.cpp" />
+    <ClCompile Include="WorkingHuman.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

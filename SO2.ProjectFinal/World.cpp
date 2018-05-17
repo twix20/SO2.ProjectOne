@@ -15,7 +15,7 @@ World::World()
 	granary = std::make_shared<Granary>();
 	kitchen = std::make_shared<Kitchen>();
 
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 500; i++)
 		granary->add_meat(Meat(180, true));
 
 	for (int i = 0; i < 300; i++)
@@ -35,7 +35,7 @@ void World::start()
 	for (int i = 0; i < 5; i++)
 		kitchen->stoves.push_back(std::make_shared<Stove>(world_sp, COOKING_MEAT_TIME_SLEEP_MS));
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 17; i++)
 		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
 
 	for (int i = 0; i < 4; i++)
@@ -60,7 +60,7 @@ void World::start()
 			while (true)
 			{
 				auto has_eaten = woodcutter->try_to_eat();
-				auto has_choped = woodcutter->try_chop_wood();
+				auto has_choped = woodcutter->try_to_work();
 
 				std::this_thread::sleep_for(std::chrono::milliseconds(WOODCUTTER_TIME_SLEEP_MS));
 			}
@@ -73,7 +73,8 @@ void World::start()
 		threads.push_back(std::thread([&](std::shared_ptr<Cook> cook) {
 			while (true)
 			{
-				auto has_eaten = cook->try_cook();
+				auto has_eaten = cook->try_to_eat();
+				auto has_cooked = cook->try_to_work();
 
 				std::this_thread::sleep_for(std::chrono::milliseconds(COOK_TIME_SLEEP_MS));
 			}

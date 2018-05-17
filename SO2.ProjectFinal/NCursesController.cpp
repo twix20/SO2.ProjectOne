@@ -71,9 +71,10 @@ void NCursesController::print_cooks(const std::vector<std::shared_ptr<Cook>>& co
 	for (auto& c : cooks)
 	{
 		lines.push_back("Cook:");
-		lines.push_back("\tIsCooking: " + std::to_string(c->is_cooking));
+		lines.push_back("\tIsWorking: " + std::to_string(c->can_work()));
 		lines.push_back("\tCooked so far: " + std::to_string(c->has_cooked_meats_quantity));
-		lines.push_back("");
+		lines.push_back("\tStamina needed: " + std::to_string(c->is_stamina_needed()));
+		lines.push_back("\tUntil " + time_point_to_string(c->stamina_till));
 	}
 
 	print_lines(35, 6, lines);

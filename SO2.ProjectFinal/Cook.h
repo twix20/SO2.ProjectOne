@@ -1,17 +1,13 @@
 #pragma once
 #include <memory>
 #include "World.h"
+#include "WorkingHuman.h"
 
-class World;
-
-class Cook
+class Cook : public WorkingHuman
 {
-private:
-	std::shared_ptr<World> _world;
-
 public:
-	bool try_cook();
-	bool can_work();
+	void perform_work() override;
+	bool is_working_time(int hours) const override;
 
 	bool is_cooking;
 	int has_cooked_meats_quantity;
