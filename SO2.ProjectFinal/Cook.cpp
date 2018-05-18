@@ -22,14 +22,16 @@ void Cook::perform_work()
 	lock.unlock();
 
 	//Cook
-	std::unique_lock<std::mutex> lock_stove(stove->mx);
+	//std::unique_lock<std::mutex> lock_stove(stove->mx);
+	is_working = true;
 	stove->cook_meat(meat, wood);
 	has_cooked_meats_quantity += 1;
-	lock_stove.unlock();
+	//lock_stove.unlock();
 
 	//Leave stove
 	std::unique_lock<std::mutex> lock_kitchen2(_world->kitchen->mx);
 	_world->kitchen->leave_stove(stove);
+	is_working = false;
 	lock_kitchen2.unlock();
 	_world->kitchen->cv_stoves.notify_one();
 }

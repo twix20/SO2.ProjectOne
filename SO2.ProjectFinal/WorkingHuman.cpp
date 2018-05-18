@@ -65,6 +65,7 @@ bool WorkingHuman::try_to_work()
 WorkingHuman::WorkingHuman(std::shared_ptr<World> world)
 {
 	_world = world;
+	is_working = false;
 	stamina_till = _world->world_time.load() + std::chrono::minutes(1);
 }
 

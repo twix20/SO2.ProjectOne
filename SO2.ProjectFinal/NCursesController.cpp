@@ -9,8 +9,10 @@ NCursesController::NCursesController(const int height, const int width)
 	initscr();
 	start_color();
 
-	init_pair(1, COLOR_WHITE, COLOR_RED);
+	init_pair(1, COLOR_WHITE, COLOR_BLACK);
 	init_pair(2, COLOR_GREEN, COLOR_BLACK);
+	init_pair(3, COLOR_RED, COLOR_RED);
+	init_pair(4, COLOR_GREEN, COLOR_GREEN);
 
 	this->height = height;
 	this->width = width;
@@ -31,12 +33,16 @@ NCursesController::~NCursesController()
 
 void NCursesController::print_world_time(std::chrono::system_clock::time_point wordl_time)
 {
+	attron(COLOR_PAIR(1));
+
 	auto time_string = time_point_to_string(wordl_time);
 
 	mvprintw(0, width / 2 - time_string.size() / 2, time_string.c_str());
 }
 void NCursesController::print_granary(std::shared_ptr<Granary> granary)
 {
+	attron(COLOR_PAIR(1));
+
 	std::lock_guard<std::mutex> lock(granary->mx);
 
 	const std::vector<std::string> lines = {
@@ -50,6 +56,8 @@ void NCursesController::print_granary(std::shared_ptr<Granary> granary)
 }
 void NCursesController::print_woodcutters(int y, std::vector<std::shared_ptr<Woodcutter>>& woodcutters)
 {
+	attron(COLOR_PAIR(1));
+
 	std::vector<std::string> header;
 	header.push_back("");
 	header.push_back(std::to_string(WOODCUTTER_START_JOB_HOUR) + "-" + std::to_string(WOODCUTTER_END_JOB_HOUR));
@@ -70,7 +78,7 @@ void NCursesController::print_woodcutters(int y, std::vector<std::shared_ptr<Woo
 
 		std::vector<std::string> rows;
 		rows.push_back(std::to_string(i));
-		rows.push_back(std::to_string(w->can_work()));
+		rows.push_back(std::to_string(w->is_working));
 		rows.push_back(std::to_string(w->chooped_wood_so_far));
 		rows.push_back(std::to_string(w->is_stamina_needed()));
 		rows.push_back(time_point_to_string(w->stamina_till));
@@ -81,6 +89,8 @@ void NCursesController::print_woodcutters(int y, std::vector<std::shared_ptr<Woo
 
 void NCursesController::print_cooks(int y, const std::vector<std::shared_ptr<Cook>>& cooks)
 {
+	attron(COLOR_PAIR(1));
+
 	std::vector<std::string> header;
 	header.push_back("");
 	header.push_back(std::to_string(COOK_START_JOB_HOUR) + "-" + std::to_string(COOK_END_JOB_HOUR));
@@ -102,12 +112,31 @@ void NCursesController::print_cooks(int y, const std::vector<std::shared_ptr<Coo
 
 		std::vector<std::string> rows;
 		rows.push_back(std::to_string(i));
-		rows.push_back(std::to_string(c->can_work()));
+		rows.push_back(std::to_string(c->is_working));
 		rows.push_back(std::to_string(c->has_cooked_meats_quantity));
 		rows.push_back(std::to_string(c->is_stamina_needed()));
 		rows.push_back(time_point_to_string(c->stamina_till));
 
 		print_rows(2, y + 2 + i, CELL_WIDTH, rows);
+	}
+}
+
+void NCursesController::print_stoves(int x, int y, std::vector<std::shared_ptr<Stove>>& stoves)
+{
+
+	mvprintw(y, x, "Stoves:");
+
+	for (uint32_t i = 0; i < stoves.size() ; i++)
+	{
+		auto stove = stoves[i];
+
+		if(stove->is_ocupied_by_cook())
+			attron(COLOR_PAIR(3));
+		else
+			attron(COLOR_PAIR(4));
+
+		mvprintw(y + 1, x + i + 1, " ");
+
 	}
 }
 

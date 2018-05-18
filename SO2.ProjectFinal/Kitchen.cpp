@@ -11,7 +11,6 @@ std::shared_ptr<Stove> Kitchen::occupy_stove(Cook* cook)
 	{
 		auto v = *it;
 		v->cook = cook;
-		stoves.erase(it);
 		return v;
 	}
 
@@ -21,7 +20,6 @@ std::shared_ptr<Stove> Kitchen::occupy_stove(Cook* cook)
 void Kitchen::leave_stove(std::shared_ptr<Stove> stove)
 {
 	stove->cook = nullptr;
-	stoves.push_back(stove);
 }
 
 int Kitchen::get_free_stoves_quantity()

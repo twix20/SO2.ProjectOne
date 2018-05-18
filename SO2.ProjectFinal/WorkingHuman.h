@@ -12,6 +12,8 @@ protected:
 public:
 	std::chrono::system_clock::time_point stamina_till;
 
+	bool is_working;
+
 	bool can_work() const;
 	bool is_stamina_needed() const;
 
