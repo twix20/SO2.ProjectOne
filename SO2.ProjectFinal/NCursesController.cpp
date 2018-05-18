@@ -49,7 +49,7 @@ void NCursesController::print_granary(std::shared_ptr<Granary> granary)
 		"Granary",
 		"RawMeats: " + std::to_string(granary->raw_meats_quantity()),
 		"FriedMeats: " + std::to_string(granary->fried_meats_quantity()),
-		"Woods: " + std::to_string(granary->woods.size())
+		"Wood: " + std::to_string(granary->woods.size())
 	};
 
 	print_lines(4, 1, lines);
@@ -123,7 +123,6 @@ void NCursesController::print_cooks(int y, const std::vector<std::shared_ptr<Coo
 
 void NCursesController::print_stoves(int x, int y, std::vector<std::shared_ptr<Stove>>& stoves)
 {
-
 	mvprintw(y, x, "Stoves:");
 
 	for (uint32_t i = 0; i < stoves.size() ; i++)
@@ -136,8 +135,42 @@ void NCursesController::print_stoves(int x, int y, std::vector<std::shared_ptr<S
 			attron(COLOR_PAIR(4));
 
 		mvprintw(y + 1, x + i + 1, " ");
-
 	}
+}
+
+void NCursesController::print_hunters(int y, const std::vector<std::shared_ptr<Hunter>>& hunters)
+{
+	attron(COLOR_PAIR(1));
+
+	std::vector<std::string> header;
+	header.push_back("");
+	header.push_back(std::to_string(HUNTER_START_JOB_HOUR) + "-" + std::to_string(HUNTER_END_JOB_HOUR));
+	print_rows(2, y, CELL_WIDTH, header);
+
+
+	std::vector<std::string> rows;
+	rows.push_back("Hunter:");
+	rows.push_back("IsWorking:");
+	rows.push_back("Raw Meat:");
+	rows.push_back("Stamina:");
+	rows.push_back("Until:");
+
+	print_rows(2, y + 1, CELL_WIDTH, rows);
+
+	for (uint32_t i = 0; i < hunters.size(); i++)
+	{
+		auto h = hunters[i];
+
+		std::vector<std::string> rows;
+		rows.push_back(std::to_string(i));
+		rows.push_back(std::to_string(h->is_working));
+		rows.push_back(std::to_string(h->hunted_raw_meat));
+		rows.push_back(std::to_string(h->is_stamina_needed()));
+		rows.push_back(time_point_to_string(h->stamina_till));
+
+		print_rows(2, y + 2 + i, CELL_WIDTH, rows);
+	}
+
 }
 
 

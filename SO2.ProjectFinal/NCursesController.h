@@ -24,5 +24,6 @@ public:
 	void print_woodcutters(int y, std::vector<std::shared_ptr<Woodcutter>>& woodcutters);
 	void print_cooks(int y, const std::vector<std::shared_ptr<Cook>>& cooks);
 	void print_stoves(int x, int y, std::vector<std::shared_ptr<Stove>>& stoves);
+	void print_hunters(int y, const std::vector<std::shared_ptr<Hunter>>& hunters);
 };
 

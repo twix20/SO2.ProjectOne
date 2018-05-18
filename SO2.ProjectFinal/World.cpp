@@ -35,18 +35,22 @@ void World::start()
 
 	std::shared_ptr<World> world_sp(this);
 
-	for (int i = 0; i < 5; i++)
+	for (auto i = 0; i < 8; i++)
 		kitchen->stoves.push_back(std::make_shared<Stove>(world_sp, COOKING_MEAT_TIME_SLEEP_MS));
 
-	for (int i = 0; i < 17; i++)
+	for (auto i = 0; i < 17; i++)
 		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
 
-	for (int i = 0; i < 12; i++)
+	for (auto i = 0; i < 12; i++)
 		cooks.push_back(std::make_shared<Cook>(world_sp));
+
+	for (auto i = 0; i < 8; i++)
+		hunters.push_back(std::make_shared<Hunter>(world_sp));
 
 	std::vector<std::shared_ptr<WorkingHuman>> working_humans;
 	working_humans.insert(working_humans.end(), woodcutters.begin(), woodcutters.end());
 	working_humans.insert(working_humans.end(), cooks.begin(), cooks.end());
+	working_humans.insert(working_humans.end(), hunters.begin(), hunters.end());
 
 	std::vector<std::thread> threads;
 	//WORLD TIME THREAD
@@ -84,7 +88,8 @@ void World::start()
 			ncurses_controller->print_granary(granary);
 			ncurses_controller->print_stoves(30, 2, kitchen->stoves);
 			ncurses_controller->print_woodcutters(5, woodcutters);
-			ncurses_controller->print_cooks(woodcutters.size() + 7, cooks);
+			ncurses_controller->print_cooks(8 + woodcutters.size(), cooks);
+			ncurses_controller->print_hunters(11 + woodcutters.size() + cooks.size() , hunters);
 
 			//std::lock_guard<std::mutex> lock_granary(granary->mx);
 
