@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-
 NCursesController::NCursesController(const int height, const int width)
 {
 	// Init ncurses
@@ -49,35 +48,67 @@ void NCursesController::print_granary(std::shared_ptr<Granary> granary)
 
 	print_lines(4, 1, lines);
 }
-void NCursesController::print_woodcutters(std::vector<std::shared_ptr<Woodcutter>>& woodcutters)
+void NCursesController::print_woodcutters(int y, std::vector<std::shared_ptr<Woodcutter>>& woodcutters)
 {
-	std::vector<std::string> lines = {"Woodcutters " + std::to_string(WOODCUTTER_START_JOB_HOUR) + "-" + std::to_string(WOODCUTTER_END_JOB_HOUR) };
+	std::vector<std::string> header;
+	header.push_back("");
+	header.push_back(std::to_string(WOODCUTTER_START_JOB_HOUR) + "-" + std::to_string(WOODCUTTER_END_JOB_HOUR));
+	print_rows(2, y, CELL_WIDTH, header);
 
-	for(auto& w : woodcutters)
+	std::vector<std::string> rows;
+	rows.push_back("Woodcuter:");
+	rows.push_back("IsWorking:");
+	rows.push_back("Wood:");
+	rows.push_back("Stamina:");
+	rows.push_back("Until:");
+
+	print_rows(2, y + 1, CELL_WIDTH, rows);
+
+	for(uint32_t i = 0; i < woodcutters.size(); i++)
 	{
-		lines.push_back("Woodcuter:");
-		lines.push_back("\tIsWorking: " + std::to_string(w->can_work()));
-		lines.push_back("\tStamina needed: " + std::to_string(w->is_stamina_needed()));
-		lines.push_back("\tUntil " + time_point_to_string(w->stamina_till));
-	}
+		auto w = woodcutters[i];
 
-	print_lines(2, 6, lines);
+		std::vector<std::string> rows;
+		rows.push_back(std::to_string(i));
+		rows.push_back(std::to_string(w->can_work()));
+		rows.push_back(std::to_string(w->chooped_wood_so_far));
+		rows.push_back(std::to_string(w->is_stamina_needed()));
+		rows.push_back(time_point_to_string(w->stamina_till));
+
+		print_rows(2, y + 2 + i, CELL_WIDTH, rows);
+	}
 }
 
-void NCursesController::print_cooks(const std::vector<std::shared_ptr<Cook>>& cooks)
+void NCursesController::print_cooks(int y, const std::vector<std::shared_ptr<Cook>>& cooks)
 {
-	std::vector<std::string> lines = { "Cooks " + std::to_string(COOK_START_JOB_HOUR) + "-" + std::to_string(COOK_END_JOB_HOUR) };
+	std::vector<std::string> header;
+	header.push_back("");
+	header.push_back(std::to_string(COOK_START_JOB_HOUR) + "-" + std::to_string(COOK_END_JOB_HOUR));
+	print_rows(2, y, CELL_WIDTH, header);
 
-	for (auto& c : cooks)
+
+	std::vector<std::string> rows;
+	rows.push_back("Cook:");
+	rows.push_back("IsWorking:");
+	rows.push_back("Cooked:");
+	rows.push_back("Stamina:");
+	rows.push_back("Until:");
+
+	print_rows(2, y + 1, CELL_WIDTH, rows);
+
+	for (uint32_t i = 0; i < cooks.size(); i++)
 	{
-		lines.push_back("Cook:");
-		lines.push_back("\tIsWorking: " + std::to_string(c->can_work()));
-		lines.push_back("\tCooked so far: " + std::to_string(c->has_cooked_meats_quantity));
-		lines.push_back("\tStamina needed: " + std::to_string(c->is_stamina_needed()));
-		lines.push_back("\tUntil " + time_point_to_string(c->stamina_till));
-	}
+		auto c = cooks[i];
 
-	print_lines(35, 6, lines);
+		std::vector<std::string> rows;
+		rows.push_back(std::to_string(i));
+		rows.push_back(std::to_string(c->can_work()));
+		rows.push_back(std::to_string(c->has_cooked_meats_quantity));
+		rows.push_back(std::to_string(c->is_stamina_needed()));
+		rows.push_back(time_point_to_string(c->stamina_till));
+
+		print_rows(2, y + 2 + i, CELL_WIDTH, rows);
+	}
 }
 
 
@@ -105,8 +136,16 @@ std::string NCursesController::time_point_to_string(std::chrono::system_clock::t
 
 void NCursesController::print_lines(int x, int y, std::vector<std::string> lines)
 {
-	for(int i = 0; i < lines.size(); i++)
+	for(uint32_t i = 0; i < lines.size(); i++)
 	{
 		mvprintw(y + i, x, lines[i].c_str());
+	}
+}
+
+void NCursesController::print_rows(int x, int y, int cell_width, std::vector<std::string> rows)
+{
+	for(uint32_t i = 0; i < rows.size(); i++)
+	{
+		mvprintw(y, x + (i * cell_width), rows[i].c_str());
 	}
 }

@@ -41,7 +41,7 @@ void World::start()
 	for (int i = 0; i < 17; i++)
 		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 		cooks.push_back(std::make_shared<Cook>(world_sp));
 
 	std::vector<std::shared_ptr<WorkingHuman>> working_humans;
@@ -82,8 +82,8 @@ void World::start()
 
 			ncurses_controller->print_world_time(world_time.load());
 			ncurses_controller->print_granary(granary);
-			ncurses_controller->print_woodcutters(woodcutters);
-			ncurses_controller->print_cooks(cooks);
+			ncurses_controller->print_woodcutters(5, woodcutters);
+			ncurses_controller->print_cooks(woodcutters.size() + 7, cooks);
 
 			//std::lock_guard<std::mutex> lock_granary(granary->mx);
 

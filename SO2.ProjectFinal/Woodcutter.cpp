@@ -4,6 +4,7 @@
 
 Woodcutter::Woodcutter(std::shared_ptr<World> world): WorkingHuman(world)
 {
+	chooped_wood_so_far = 0;
 }
 
 Woodcutter::~Woodcutter()
@@ -15,6 +16,7 @@ void Woodcutter::perform_work()
 	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	std::lock_guard<std::mutex> lock(_world->granary->mx);
+	chooped_wood_so_far += 1;
 	_world->granary->add_wood(Wood(3000));//cooking time TODO: zmien na random
 }
 
