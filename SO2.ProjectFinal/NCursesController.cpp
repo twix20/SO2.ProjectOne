@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "NCursesController.h"
 #include <memory>
 #include <string>

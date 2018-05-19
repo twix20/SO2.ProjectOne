@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "WorkingHuman.h"
 #include <memory>
 #include "World.h"

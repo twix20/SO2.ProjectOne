@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Hunter.h"
 #include "World.h"
 

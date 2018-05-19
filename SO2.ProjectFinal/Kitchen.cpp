@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Kitchen.h"
 #include <algorithm>
 

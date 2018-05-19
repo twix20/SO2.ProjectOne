@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "World.h"
 #include <iostream>
 #include <iomanip>
@@ -110,12 +109,4 @@ void World::start()
 	}
 
 	std::for_each(threads.begin(), threads.end(), [](std::thread& t) {t.join(); });
-}
-
-void print_time(std::chrono::system_clock::time_point tp)
-{
-	auto in_time_t = std::chrono::system_clock::to_time_t(tp);
-	std::tm buf{};
-	localtime_s(&buf, &in_time_t);
-	std::cout << std::put_time(&buf, "%Y-%m-%d %X");
 }
