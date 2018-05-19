@@ -55,6 +55,8 @@ bool WorkingHuman::try_to_work()
 	{
 
 		perform_work();
+
+		_world->all_works_performed += 1;
 		return true;
 		
 	}

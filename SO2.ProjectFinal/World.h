@@ -29,7 +29,8 @@ class Cook;
 class World
 {
 public:
-	std::atomic<std::chrono::system_clock::time_point> world_time{};
+	std::atomic<std::chrono::system_clock::time_point> world_time;
+	std::atomic<int> all_works_performed;
 
 	std::shared_ptr<Granary> granary;
 	std::shared_ptr<Kitchen> kitchen;

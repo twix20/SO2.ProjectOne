@@ -16,10 +16,12 @@ void Cook::perform_work()
 	lock_kitchen.unlock();
 
 	//Wait for wood
-	std::unique_lock<std::mutex> lock(_world->granary->mx);
-	_world->granary->cv_woods.wait(lock, [&] { return _world->granary->woods.size() > 0; });
-	const auto wood = _world->granary->take_wood();
-	lock.unlock();
+	std::shared_ptr<Wood> wood;
+	{
+		std::unique_lock<std::mutex> lock(_world->granary->mx);
+		_world->granary->cv_woods.wait(lock, [&] { return _world->granary->woods.size() > 0; });
+		wood = std::move(_world->granary->take_wood());
+	}
 
 	//Cook
 	//std::unique_lock<std::mutex> lock_stove(stove->mx);
