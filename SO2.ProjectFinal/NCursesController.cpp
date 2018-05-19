@@ -173,6 +173,16 @@ void NCursesController::print_hunters(int y, const std::vector<std::shared_ptr<H
 
 }
 
+void NCursesController::print_all_works_performed(int all_works_performed)
+{
+	const std::vector<std::string> lines = {
+		"All Works Performed:",
+		std::to_string(all_works_performed),
+	};
+
+	print_lines(55, 2, lines);
+}
+
 
 std::string NCursesController::time_point_to_string(std::chrono::system_clock::time_point &tp)
 {
