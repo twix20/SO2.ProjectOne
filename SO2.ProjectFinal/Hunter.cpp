@@ -14,7 +14,7 @@ Hunter::~Hunter()
 void Hunter::perform_work()
 {
 	is_working = true;
-	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	std::lock_guard<std::mutex> lock(_world->granary->mx);
 	hunted_raw_meat += 1;

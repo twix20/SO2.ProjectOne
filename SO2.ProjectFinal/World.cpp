@@ -38,13 +38,13 @@ void World::start()
 	for (auto i = 0; i < 8; i++)
 		kitchen->stoves.push_back(std::make_shared<Stove>(world_sp, COOKING_MEAT_TIME_SLEEP_MS));
 
-	for (auto i = 0; i < 17; i++)
+	for (auto i = 0; i < 1; i++)
 		woodcutters.push_back(std::make_shared<Woodcutter>(world_sp));
 
-	for (auto i = 0; i < 12; i++)
+	for (auto i = 0; i < 1; i++)
 		cooks.push_back(std::make_shared<Cook>(world_sp));
 
-	for (auto i = 0; i < 8; i++)
+	for (auto i = 0; i < 1; i++)
 		hunters.push_back(std::make_shared<Hunter>(world_sp));
 
 	std::vector<std::shared_ptr<WorkingHuman>> working_humans;

@@ -20,7 +20,7 @@ bool Stove::is_ocupied_by_cook()
 
 void Stove::cook_meat(std::shared_ptr<Meat> meat, std::shared_ptr<Wood> wood)
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(wood->cookingTime));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(wood->cookingTime));
 
 	meat->is_fried = true;
 	std::lock_guard<std::mutex> lock_granar(_world->granary->mx);
